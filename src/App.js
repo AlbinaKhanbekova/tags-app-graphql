@@ -3,6 +3,7 @@ import { ApolloProvider } from "react-apollo";
 import client from './apollo-client';
 import logo from './logo.svg';
 import './App.css';
+import ExchangeRates from './ExchangeRates/ExchangeRates';
 
 
 class App extends Component {
@@ -16,7 +17,8 @@ class App extends Component {
           </header>
           <p className="App-intro">
             To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
+          </p>
+          <ExchangeRates />
         </div>
       </ApolloProvider>
     );
