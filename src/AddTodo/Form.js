@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Mutation } from 'react-apollo';
 import { ADD_TAG, GET_TAG } from './queries';
+import { Input, Button, FormGroup, Grid } from '@material-ui/core';
 
 const updateCache = (cache, { data: { addTag } }) => {
     const { allTags } = cache.readQuery({ query: GET_TAG });
@@ -23,8 +24,8 @@ class Form extends Component {
             <Mutation mutation={ADD_TAG} update={updateCache}>
                 {
                     (addTag, { data, loading, error }) => (
-                        <div>
-                            <form
+                        <Grid item xs={5} >
+                            <FormGroup
                                 onSubmit={async e => {
                                     e.preventDefault();
                                     const input = e.currentTarget.getElementsByTagName('input')[0];
@@ -34,10 +35,10 @@ class Form extends Component {
                                     input.value = '';
                                 }}
                             >
-                                <input placeholder="Text here..." />
-                                <button type="submit">Add tag</button>
-                            </form>
-                        </div>
+                                <Input placeholder="Text here..." />
+                                <Button type="submit" color="primary" variant="contained">Add tag</Button>
+                            </FormGroup>
+                        </Grid>
                     )
                 }
 

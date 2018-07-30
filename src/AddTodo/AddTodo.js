@@ -3,6 +3,8 @@ import { Mutation, Query } from 'react-apollo';
 import { GET_TAG } from './queries';
 import Form from './Form';
 
+import { List, ListItemIcon, ListItem, ListItemText } from '@material-ui/core';
+
 
 
 class AddTodo extends Component {
@@ -18,12 +20,17 @@ class AddTodo extends Component {
                     console.log("AddTodo", data);
                     return (
                         <div>
-                            <div>
+                            <List>
                                 {allTags.map((tag, i) => (
-                                    <p key={`${tag.label}-${i}`}>{tag.label}</p>
+                                    <ListItem key={`${tag.label}-${i}`}>
+                                        <ListItemIcon>
+                                            <i style={{verticalAlign: "text-bottom", fontWeight:"bold"}} className="material-icons">#</i>
+                                        </ListItemIcon>
+                                        <ListItemText primary={tag.label} />
+                                    </ListItem>
                                 ))}
-                            </div>
-                            
+                            </List>
+
                         </div>
                     )
                 }}
