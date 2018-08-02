@@ -13,8 +13,11 @@ class App extends Component {
       <ApolloProvider client={client}>
         <Grid className="App">
           <h1>Tags</h1>
-          <Form />
-          <AddTodo />
+          <Grid justify="center" alignItems="center"  container direction="column">
+            <Form />
+            <AddTodo />
+          </Grid>
+
         </Grid>
       </ApolloProvider>
     );

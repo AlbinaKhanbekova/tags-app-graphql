@@ -5,8 +5,6 @@ import { Input, Button, FormGroup, Grid } from '@material-ui/core';
 
 const updateCache = (cache, { data: { addTag } }) => {
     const { allTags } = cache.readQuery({ query: GET_TAG });
-
-    console.log(allTags);
     addTag.type = "Company";
 
     cache.writeQuery({
@@ -24,24 +22,23 @@ class Form extends Component {
             <Mutation mutation={ADD_TAG} update={updateCache}>
                 {
                     (addTag, { data, loading, error }) => (
-                        <Grid item xs={5} >
-                            <FormGroup
+                        <Grid item>
+                            <form
                                 onSubmit={async e => {
                                     e.preventDefault();
+                                    console.log("label");
                                     const input = e.currentTarget.getElementsByTagName('input')[0];
                                     const label = input.value;
-                                    console.log(label);
                                     await addTag({ variables: { type: "Company", label } });
                                     input.value = '';
                                 }}
                             >
                                 <Input placeholder="Text here..." />
-                                <Button type="submit" color="primary" variant="contained">Add tag</Button>
-                            </FormGroup>
+                                <Button type="submit" color="primary" variant="contained">{loading ? "Loading..." : "Add tag"}</Button>
+                            </form>
                         </Grid>
                     )
                 }
-
             </Mutation>
         )
     }
