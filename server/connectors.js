@@ -26,6 +26,14 @@ function addTag(type, label) {
     }, 2000);
   });
 }
+function removeTag(id) {
+  return new Promise(resolve => {
+    setTimeout(() => {
+      tags = _.filter(tags, tag => tag.id !== id);
+      resolve(id);
+    }, 2000);
+  });
+}
 
 function fakeDelay (cb) {
   return new Promise(resolve => {
@@ -60,4 +68,5 @@ export default {
     return tags[tags.length - 1];
   },
   addTag,
+  removeTag
 };

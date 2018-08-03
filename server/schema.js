@@ -31,6 +31,7 @@ const typeDefs = [`
 
   type Mutation {
     addTag(type: String!, label: String!): Tag
+    removeTag(id: Int!): Int
   }
 
   type Subscription {
@@ -75,6 +76,10 @@ const resolvers = {
       pubsub.publish(TAGS_CHANGED_TOPIC, { tagAdded: newTag });
       return newTag;
     },
+    removeTag: async (root, { id }, context) => {
+      const removeTag = await Tags.removeTag(id);
+      return removeTag;
+    }
   },
   Subscription: {
     tagAdded: {

@@ -18,5 +18,4 @@ npm run dev
 #### Start app
 ```
 npm start
-```
-
+``
