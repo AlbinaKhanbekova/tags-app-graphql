@@ -1,11 +1,11 @@
 
-import { GET_TAG } from "../AddTodo/queries";
+import { GET_TAG, GET_CURRENT_TAG } from "../AddTodo/queries";
+import defaults from './defaults';
 
 export default {
     // resolvers field removed from here, no longer nested
     Mutation: {
         addTag: (_, { type, label }, { cache }) => {
-            console.log("addTag");
             const { allTags } = cache.readQuery({ query: GET_TAG });
             let index = 0;
             if (allTags && allTags.length) {
@@ -26,6 +26,9 @@ export default {
                 }
             })
 
+
+            console.log("addTag", cache.readQuery({ query: GET_TAG }));
+
             return newTag;
 
         },
@@ -41,6 +44,26 @@ export default {
                     allTags: filterTags
                 }
             })
+        },
+        updateCurrentTag: (_, { type, label }, { cache }) => {
+            const { currentTag } = cache.readQuery({ query: GET_CURRENT_TAG });
+            console.log("updateCurrentTag", currentTag, type, label);
+
+            cache.writeQuery({
+                query: GET_CURRENT_TAG,
+                data: {
+                    currentTag: {
+                        __typename: 'TagForm',
+                        label: label,
+                        type: type,
+                        typeTitle: currentTag.typeTitle,
+                        labelTitle: currentTag.labelTitle
+                    }
+                }
+            });
+        },
+        resetCurrentTag: (_, d, { cache }) => {
+            cache.writeData({ data: { currentTag: defaults.currentTag } })
         }
     }
 

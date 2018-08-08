@@ -28,7 +28,6 @@ class AddTodo extends Component {
                     if (error) return `Error!: ${error}`;
                     const { allTags } = data;
 
-                    console.log("AddTodo", data);
                     if (allTags && allTags.length === 0) return null;
                     return (
                         <div>
@@ -49,7 +48,6 @@ class AddTodo extends Component {
                                                         <IconButton aria-label="Delete" onClick={
                                                             async e => {
                                                                 e.preventDefault();
-                                                                console.log("remove tag", tag.id);
                                                                 await removeTag({ variables: { id: tag.id } });
                                                             }
                                                         }>

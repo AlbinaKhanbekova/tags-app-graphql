@@ -28,3 +28,25 @@ export const GET_TAG = gql`
         }
     }
 `;
+
+export const GET_CURRENT_TAG = gql`
+    query getCurrentTag {
+        currentTag @client {
+            label
+            type
+            labelTitle
+            typeTitle
+        }
+    }
+`;
+
+export const UPDATE_CURRENT_TAG =  gql`
+    mutation updateCurrentTag($type: String!, $label: String!)  {
+        updateCurrentTag(type: $type, label: $label) @client
+    }
+`;
+export const RESET_CURRENT_TAG =  gql`
+    mutation resetCurrentTag {
+        resetCurrentTag @client
+    }
+`;

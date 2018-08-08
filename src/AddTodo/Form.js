@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { Mutation } from 'react-apollo';
-import { ADD_TAG, GET_TAG } from './queries';
+import { Query, Mutation, graphql, compose } from 'react-apollo';
+import { ADD_TAG, UPDATE_CURRENT_TAG, GET_CURRENT_TAG, RESET_CURRENT_TAG } from './queries';
 import { Button, FormGroup, Grid, TextField } from '@material-ui/core';
 
 // const updateCache = (cache, { data: { addTag } }) => {
@@ -18,57 +18,80 @@ import { Button, FormGroup, Grid, TextField } from '@material-ui/core';
 
 class Form extends Component {
 
+    async onSubmitHandler(e, { type, label }, addCallback, cleanCallback) {
+        e.preventDefault();
+
+        console.log("label");
+        await addCallback({ variables: { type: type, label: label } });
+        await cleanCallback();
+        // labelInput.value = '';
+        // typeInput.value = '';
+    }
+
     render() {
-        const label = 'Add tag label';
-        const type = 'Add tag type';
+        console.log("props", this.props);
         return (
-            <Mutation mutation={ADD_TAG}>
-                {
-                    (addTag, { data, loading, error }) => (
-                        <Grid item>
-                            <form
-                                onSubmit={async e => {
-                                    e.preventDefault();
-                                    const inputs = [...e.currentTarget.getElementsByTagName('input')];
-                                    const [labelInput] = inputs.filter(item => item.id === 'label');
-                                    const [typeInput] = inputs.filter(item => item.id === 'type');
+            <Query query={GET_CURRENT_TAG}>
+                {({ loading, error, data: { currentTag } }) => {
+                    console.log("currentTag", currentTag);
 
-                                    console.log("label", addTag);
-                                    await addTag({ variables: { type: typeInput.value, label: labelInput.value } });
-                                    labelInput.value = '';
-                                    typeInput.value = '';
-                                }}
-                            >
 
-                                <FormGroup>
-                                    <TextField
-                                        label={label}
-                                        type="text"
-                                        margin="normal"
-                                        id="label"
-                                        value={"dd"}
-                                        onChange={e => {
-                                            
-
+                    return <Mutation mutation={ADD_TAG}>
+                        {
+                            (addTag, { data, loading, error }) => (
+                                <Grid item>
+                                    <form
+                                        onSubmit={async e => {
+                                            await this.onSubmitHandler(e, currentTag, addTag, this.props.resetCurrentTag);
                                         }}
-                                    />
-                                    <TextField
-                                        label={type}
-                                        type="text"
-                                        margin="normal"
-                                        id="type"
-                                        value={"dd"}
-                                    />
-                                    <Button type="submit" color="primary" variant="contained" margin="normal">{loading ? "Loading..." : "Add tag"}</Button>
+                                    >
 
-                                </FormGroup>
-                            </form>
-                        </Grid>
-                    )
-                }
-            </Mutation>
+                                        <FormGroup>
+                                            <Mutation mutation={UPDATE_CURRENT_TAG}>
+                                                {
+                                                    (updateCurrentTag, { data, loading, error }) => (
+                                                        <div>
+
+                                                            <TextField
+                                                                label={currentTag.labelTitle}
+                                                                type="text"
+                                                                margin="normal"
+                                                                id="label"
+                                                                value={currentTag.label}
+                                                                onChange={e => {
+                                                                    console.log(e.target.value);
+                                                                    updateCurrentTag({ variables: { ...currentTag, label: e.target.value } })
+                                                                }}
+                                                            />
+                                                            <TextField
+                                                                label={currentTag.typeTitle}
+                                                                type="text"
+                                                                margin="normal"
+                                                                id="type"
+                                                                value={currentTag.type}
+                                                                onChange={e =>
+                                                                    updateCurrentTag({ variables: { ...currentTag, type: e.target.value } })
+                                                                }
+                                                            />
+                                                        </div>
+
+                                                    )
+                                                }
+                                            </Mutation>
+                                            <Button type="submit" color="primary" variant="contained" margin="normal">{loading ? "Loading..." : "Add tag"}</Button>
+
+                                        </FormGroup>
+                                    </form>
+                                </Grid>
+                            )
+                        }
+                    </Mutation>
+                }}
+            </Query>
         )
     }
 }
 
-export default Form;
+export default compose(
+    graphql(RESET_CURRENT_TAG, { name: 'resetCurrentTag' })
+)(Form);
